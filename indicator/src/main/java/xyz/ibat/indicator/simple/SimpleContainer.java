@@ -6,12 +6,15 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import java.util.List;
 
 import xyz.ibat.indicator.base.CommonContainer;
 import xyz.ibat.indicator.base.IPagerIndicator;
 import xyz.ibat.indicator.base.IPagerTitle;
+import xyz.ibat.indicator.base.IndicatorParameter;
 
 
 /**
@@ -51,10 +54,13 @@ public class SimpleContainer extends CommonContainer {
 
     @Override
     public IPagerIndicator getIndicator(Context context) {
-        SimpleLinearIndicatorView indicatorView = new SimpleLinearIndicatorView(context);
-        indicatorView.setIndicatorColor(Color.BLUE);
-        indicatorView.setIndicatorPadding(20);
-        indicatorView.setIndicatorHeight(6);
-        return indicatorView;
+        IndicatorParameter parameter = new IndicatorParameter.Builder()
+                .withIndicatorHeight(6)
+                .withIndicatorColor(Color.BLUE)
+                .withLRPadding(20)
+                .withStartInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndInterpolator(new DecelerateInterpolator())
+                .build();
+        return new SimpleLinearIndicatorView(context, parameter);
     }
 }

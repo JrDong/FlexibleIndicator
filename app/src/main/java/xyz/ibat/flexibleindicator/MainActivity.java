@@ -19,6 +19,7 @@ import xyz.ibat.indicator.TabSelectedListener;
 import xyz.ibat.indicator.base.CommonContainer;
 import xyz.ibat.indicator.base.IPagerIndicator;
 import xyz.ibat.indicator.base.IPagerTitle;
+import xyz.ibat.indicator.base.IndicatorParameter;
 import xyz.ibat.indicator.base.KwIndicator;
 import xyz.ibat.indicator.circle.CircleIndicatorView;
 import xyz.ibat.indicator.simple.SimpleContainer;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_indicator);
+        setContentView(R.layout.activity_main);
         mKwIndicator = (KwIndicator) findViewById(R.id.kw_indicator);
         mKwIndicatorCircle = (KwIndicator) findViewById(R.id.kw_indicator_circle);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -60,11 +61,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public IPagerIndicator getIndicator(Context context) {
-                CircleIndicatorView indicatorView = new CircleIndicatorView(context);
-                indicatorView.setIndicatorColor(Color.BLUE);
-                indicatorView.setIndicatorPadding(10);
-                indicatorView.setIndicatorHeight(40);
-                return indicatorView;
+                IndicatorParameter parameter = new IndicatorParameter.Builder()
+                        .withIndicatorHeight(40)
+                        .withIndicatorColor(Color.BLUE)
+                        .withLRPadding(10)
+                        .build();
+
+                return new CircleIndicatorView(context, parameter);
             }
         };
         commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
