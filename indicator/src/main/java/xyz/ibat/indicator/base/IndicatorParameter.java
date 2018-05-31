@@ -1,5 +1,6 @@
 package xyz.ibat.indicator.base;
 
+import android.view.Gravity;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -13,6 +14,8 @@ public class IndicatorParameter {
     public int lRPadding;
     public int indicatorHeight;
     public int indicatorColor;
+    public int radius;
+    public int gravity;
     public Interpolator startInterpolator;
     public Interpolator endInterpolator;
 
@@ -20,14 +23,18 @@ public class IndicatorParameter {
         this.lRPadding = builder.lRPadding;
         this.indicatorHeight = builder.indicatorHeight;
         this.indicatorColor = builder.indicatorColor;
-        this.startInterpolator = builder.startInterpolator == null? new LinearInterpolator() : builder.startInterpolator;
-        this.endInterpolator = builder.endInterpolator == null? new LinearInterpolator() : builder.endInterpolator;
+        this.radius = builder.radius;
+        this.gravity = builder.gravity;
+        this.startInterpolator = builder.startInterpolator == null ? new LinearInterpolator() : builder.startInterpolator;
+        this.endInterpolator = builder.endInterpolator == null ? new LinearInterpolator() : builder.endInterpolator;
     }
 
     public static final class Builder{
         private int lRPadding;
         private int indicatorHeight;
         private int indicatorColor;
+        private int radius;
+        private int gravity = Gravity.BOTTOM;
         private Interpolator startInterpolator;
         private Interpolator endInterpolator;
 
@@ -43,6 +50,21 @@ public class IndicatorParameter {
 
         public Builder withIndicatorColor(int indicatorColor){
             this.indicatorColor = indicatorColor;
+            return this;
+        }
+
+        public Builder withRadius(int radius){
+            this.radius = radius;
+            return this;
+        }
+
+        /**
+         * Gravity.TOP
+         * Gravity.BOTTOM
+         * Gravity.Center
+         */
+        public Builder withGravity(int gravity){
+            this.gravity = gravity;
             return this;
         }
 

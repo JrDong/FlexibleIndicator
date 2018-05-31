@@ -9,26 +9,29 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.List;
 
 import xyz.ibat.indicator.TabSelectedListener;
 import xyz.ibat.indicator.base.CommonContainer;
-import xyz.ibat.indicator.base.IPagerIndicator;
 import xyz.ibat.indicator.base.IPagerTitle;
 import xyz.ibat.indicator.base.IndicatorParameter;
 import xyz.ibat.indicator.base.KwIndicator;
-import xyz.ibat.indicator.circle.CircleIndicatorView;
 import xyz.ibat.indicator.simple.SimpleContainer;
 import xyz.ibat.indicator.simple.SimplePagerTitleView;
+import xyz.ibat.indicator.titles.GradientTitleView;
+import xyz.ibat.indicator.utils.IndicatorHelper;
+import xyz.ibat.indicator.utils.T;
 
 public class MainActivity extends AppCompatActivity {
 
     private KwIndicator mKwIndicator;
     private KwIndicator mKwIndicatorCircle;
+    private KwIndicator mKwIndicatorTop;
     private ViewPager mViewPager;
 
     private static final String[] CHANNELS = new String[]{"CUPCAKE", "DONUT", "ECLAIR", "GINGERBREAD", "HONEYCOMB", "ICE_CREAM_SANDWICH", "JELLY_BEAN", "KITKAT", "LOLLIPOP", "M", "NOUGAT"};
@@ -41,64 +44,87 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mKwIndicator = (KwIndicator) findViewById(R.id.kw_indicator);
         mKwIndicatorCircle = (KwIndicator) findViewById(R.id.kw_indicator_circle);
+        mKwIndicatorTop = (KwIndicator) findViewById(R.id.kw_indicator_top);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(mAdapter);
         initFirstIndicator();
         initSecondIndicator();
-    }
-
-    private void initSecondIndicator() {
-        CommonContainer commonContainer = new CommonContainer(this) {
-            @Override
-            public IPagerTitle getTitleView(Context context, int index) {
-                SimplePagerTitleView simplePagerTitleView = new SimplePagerTitleView(context);
-                simplePagerTitleView.setPadding(16,0,16,0);
-                simplePagerTitleView.setNormalColor(Color.BLACK);
-                simplePagerTitleView.setSelectedColor(Color.YELLOW);
-                simplePagerTitleView.setText(mDataList.get(index));
-                return simplePagerTitleView;
-            }
-
-            @Override
-            public IPagerIndicator getIndicator(Context context) {
-                IndicatorParameter parameter = new IndicatorParameter.Builder()
-                        .withIndicatorHeight(40)
-                        .withIndicatorColor(Color.BLUE)
-                        .withLRPadding(10)
-                        .build();
-
-                return new CircleIndicatorView(context, parameter);
-            }
-        };
-        commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
-        mKwIndicatorCircle.setContainer(commonContainer);
-        mKwIndicatorCircle.bind(mViewPager);
+        initThirdIndicator();
     }
 
     private void initFirstIndicator() {
-        SimpleContainer simpleContainer = new SimpleContainer(this);
+        SimpleContainer simpleContainer = new SimpleContainer(this){
+            @Override
+            public IPagerTitle getTitleView(Context context, int index) {
+                SimplePagerTitleView simplePagerTitleView = new GradientTitleView(context);
+                int padding = IndicatorHelper.dip2px(getContext(), 16);
+                simplePagerTitleView.setPadding(padding, 0, padding, 0);
+                simplePagerTitleView.setNormalColor(Color.LTGRAY);
+                simplePagerTitleView.setSelectedColor(Color.BLACK);
+                simplePagerTitleView.setText(mDataList.get(index));
+                return simplePagerTitleView;
+            }
+        };
         simpleContainer.setTitles(mDataList);
         simpleContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
         mKwIndicator.setOnTabSelectedListener(new TabSelectedListener() {
             @Override
             public void onTabSelected(int position) {
-                Toast.makeText(MainActivity.this, " onTabSelected " + position, Toast.LENGTH_SHORT).show();
+                T.show(MainActivity.this, " onTabSelected " + position);
             }
 
             @Override
             public void onTabUnselected(int position) {
-                Toast.makeText(MainActivity.this, " onTabUnselected " + position, Toast.LENGTH_SHORT).show();
+                T.show(MainActivity.this, " onTabUnselected " + position);
             }
 
             @Override
             public void onTabReselected(int position) {
-                Toast.makeText(MainActivity.this, " onTabReselected " + position, Toast.LENGTH_SHORT).show();
+                T.show(MainActivity.this, " onTabReselected " + position);
             }
         });
         mKwIndicator.setContainer(simpleContainer);
         mKwIndicator.bind(mViewPager);
     }
 
+    private void initSecondIndicator() {
+        SimpleContainer commonContainer = new SimpleContainer(this){
+            @Override
+            protected IndicatorParameter provideIndicatorParameter() {
+                return new IndicatorParameter.Builder()
+                        .withIndicatorHeight(IndicatorHelper.dip2px(getContext(), 30))
+                        .withIndicatorColor(Color.GRAY)
+                        .withLRPadding(IndicatorHelper.dip2px(getContext(), 5))
+                        .withRadius(IndicatorHelper.dip2px(getContext(), 20))
+                        .withGravity(Gravity.CENTER)
+                        .build();
+            }
+        };
+        commonContainer.setTitles(mDataList);
+        commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
+        mKwIndicatorCircle.setContainer(commonContainer);
+        mKwIndicatorCircle.bind(mViewPager);
+    }
+
+    private void initThirdIndicator() {
+        SimpleContainer commonContainer = new SimpleContainer(this){
+            @Override
+            protected IndicatorParameter provideIndicatorParameter() {
+                return new IndicatorParameter.Builder()
+                        .withIndicatorHeight(IndicatorHelper.dip2px(getContext(), 3))
+                        .withIndicatorColor(Color.GREEN)
+                        .withLRPadding(IndicatorHelper.dip2px(getContext(), 20))
+                        .withGravity(Gravity.TOP)
+                        .withStartInterpolator(new AccelerateDecelerateInterpolator())
+                        .withEndInterpolator(new DecelerateInterpolator())
+                        .build();
+            }
+        };
+        commonContainer.setTitles(mDataList);
+        commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
+        mKwIndicatorTop.setContainer(commonContainer);
+        mKwIndicatorTop.bind(mViewPager);
+    }
 
     private class IndicatorAdapter extends PagerAdapter {
 

@@ -17,5 +17,16 @@ public interface IPagerTitle {
      */
     void onDeselected(int index, int totalCount);
 
+    /**
+     * @param leavePercent 离开的百分比
+     * @param leftToRight 是否是从左到右
+     */
+    void onLeave(int index, int totalCount, float leavePercent, boolean leftToRight);
+
+    /**
+     * @param enterPercent 进入的百分比
+     * @param leftToRight 是否是从左到右
+     */
+    void onEnter(int index, int totalCount, float enterPercent, boolean leftToRight);
 
 }

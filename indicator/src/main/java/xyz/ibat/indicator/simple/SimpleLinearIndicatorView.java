@@ -6,11 +6,12 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.view.Gravity;
 import android.view.View;
 
 import java.util.List;
 
-import xyz.ibat.indicator.IndicatorHelper;
+import xyz.ibat.indicator.utils.IndicatorHelper;
 import xyz.ibat.indicator.base.IPagerIndicator;
 import xyz.ibat.indicator.base.IndicatorParameter;
 import xyz.ibat.indicator.model.LocationModel;
@@ -42,11 +43,10 @@ public class SimpleLinearIndicatorView extends View implements IPagerIndicator {
         mIndicatorPaint.setColor(mParameter.indicatorColor);
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawRect(mLineRect, mIndicatorPaint);
+        canvas.drawRoundRect(mLineRect, mParameter.radius, mParameter.radius, mIndicatorPaint);
     }
 
     @Override
@@ -65,8 +65,25 @@ public class SimpleLinearIndicatorView extends View implements IPagerIndicator {
 
         mLineRect.left = leftX + (nextLeftX - leftX) * mParameter.startInterpolator.getInterpolation(positionOffset) + mParameter.lRPadding;
         mLineRect.right = rightX + (nextRightX - rightX) * mParameter.endInterpolator.getInterpolation(positionOffset) - mParameter.lRPadding;
-        mLineRect.top = getHeight() - mParameter.indicatorHeight;
-        mLineRect.bottom = getHeight();
+
+        switch (mParameter.gravity){
+            case Gravity.TOP:
+                mLineRect.top = 0;
+                mLineRect.bottom = mParameter.indicatorHeight;
+                break;
+            case Gravity.BOTTOM:
+                mLineRect.top = getHeight() - mParameter.indicatorHeight;
+                mLineRect.bottom = getHeight();
+                break;
+            case Gravity.CENTER:
+                int space = (getHeight() - mParameter.indicatorHeight) / 2;
+                mLineRect.top = space;
+                mLineRect.bottom = getHeight() - space;
+                break;
+            default:
+                break;
+        }
+
         invalidate();
     }
 

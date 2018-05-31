@@ -8,13 +8,12 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-
 import java.util.List;
-
 import xyz.ibat.indicator.base.CommonContainer;
 import xyz.ibat.indicator.base.IPagerIndicator;
 import xyz.ibat.indicator.base.IPagerTitle;
 import xyz.ibat.indicator.base.IndicatorParameter;
+import xyz.ibat.indicator.utils.IndicatorHelper;
 
 
 /**
@@ -45,22 +44,26 @@ public class SimpleContainer extends CommonContainer {
     @Override
     public IPagerTitle getTitleView(Context context, int index) {
         SimplePagerTitleView simplePagerTitleView = new SimplePagerTitleView(context);
-        simplePagerTitleView.setPadding(16,0,16,0);
-        simplePagerTitleView.setNormalColor(Color.BLACK);
-        simplePagerTitleView.setSelectedColor(Color.YELLOW);
+        int padding = IndicatorHelper.dip2px(context, 16);
+        simplePagerTitleView.setPadding(padding,0,padding,0);
+        simplePagerTitleView.setNormalColor(Color.LTGRAY);
+        simplePagerTitleView.setSelectedColor(Color.BLACK);
         simplePagerTitleView.setText(mTitles.get(index));
         return simplePagerTitleView;
     }
 
     @Override
     public IPagerIndicator getIndicator(Context context) {
-        IndicatorParameter parameter = new IndicatorParameter.Builder()
-                .withIndicatorHeight(6)
+        return new SimpleLinearIndicatorView(context, provideIndicatorParameter());
+    }
+
+    protected IndicatorParameter provideIndicatorParameter(){
+        return new IndicatorParameter.Builder()
+                .withIndicatorHeight(IndicatorHelper.dip2px(getContext(), 3))
                 .withIndicatorColor(Color.BLUE)
-                .withLRPadding(20)
+                .withLRPadding(IndicatorHelper.dip2px(getContext(), 20))
                 .withStartInterpolator(new AccelerateDecelerateInterpolator())
                 .withEndInterpolator(new DecelerateInterpolator())
                 .build();
-        return new SimpleLinearIndicatorView(context, parameter);
     }
 }

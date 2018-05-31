@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +37,12 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
     public static final int MODE_FIXED = 1;
     private int mMode = MODE_FIXED;
     private int mSelectedIndex;
+    private int mLastIndex;
+    private int mScrollState;
+    private float mLastPositionOffset;
     private float mScrollRate = 0.5f;
     private List<LocationModel> mLocationDatas = new ArrayList<>();
+    private SparseArray<Float> mLeavedPercents = new SparseArray<Float>();
 
     private IPagerIndicator mPagerIndicator;
     private PagerAdapter mAdapter;
@@ -136,47 +142,81 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
             float nextScrollTo = next.horizontalCenter() - mScrollView.getWidth() * mScrollRate;
             mScrollView.scrollTo((int) (scrollTo + (nextScrollTo - scrollTo) * positionOffset), 0);
         }
+
+        float currentPositionOffset = position + positionOffset;
+        boolean leftToRight = currentPositionOffset >= mLastPositionOffset;
+        if (mScrollState != ViewPager.SCROLL_STATE_IDLE){
+            if (mLastPositionOffset == currentPositionOffset){
+                return;
+            }
+            int nextPosition = position + 1;
+            boolean normalDispatch = true;
+            if (positionOffset == 0.0f) {
+                if (leftToRight) {
+                    nextPosition = position - 1;
+                    normalDispatch = false;
+                }
+            }
+            for (int i = 0; i < mAdapter.getCount(); i++) {
+                if (i == position || i == nextPosition) {
+                    continue;
+                }
+                Float leavedPercent = mLeavedPercents.get(i, 0.0f);
+                if (leavedPercent != 1.0f) {
+                    dispatchOnLeave(i, 1.0f, leftToRight);
+                }
+            }
+            if (normalDispatch) {
+                if (leftToRight) {
+                    dispatchOnLeave(position, positionOffset, true);
+                    dispatchOnEnter(nextPosition, positionOffset, true);
+                } else {
+                    dispatchOnLeave(nextPosition, 1.0f - positionOffset, false);
+                    dispatchOnEnter(position, 1.0f - positionOffset, false);
+                }
+            } else {
+                dispatchOnLeave(nextPosition, 1.0f - positionOffset, true);
+                dispatchOnEnter(position, 1.0f - positionOffset, true);
+            }
+        } else {
+            for (int i = 0 ; i < mAdapter.getCount() ; i++){
+                if (i == mSelectedIndex){
+                    continue;
+                }
+                Float leavedPercent = mLeavedPercents.get(i, 0.0f);
+                if (leavedPercent != 1.0f) {
+                    dispatchOnLeave(i, 1.0f, leftToRight);
+                }
+            }
+            dispatchOnEnter(mSelectedIndex, 1f, leftToRight);
+            dispatchOnSelected(mSelectedIndex);
+        }
+        mLastPositionOffset = currentPositionOffset;
     }
 
     @Override
     public void onPageSelected(int position) {
+        mLastIndex = position;
         mSelectedIndex = position;
         if (mPagerIndicator != null){
             mPagerIndicator.onPageSelected(position);
         }
         for (int i = 0; i < mAdapter.getCount(); i++){
-            View view = mTitleContainer.getChildAt(i);
-            if (view instanceof IPagerTitle){
-                IPagerTitle pagerTitle = (IPagerTitle) view;
-                if (position == i){
-                    pagerTitle.onSelected(position, mAdapter.getCount());
-                } else {
-                    pagerTitle.onDeselected(position, mAdapter.getCount());
-                }
+            if (position == i){
+                dispatchOnSelected(i);
+            } else {
+                dispatchOnDeselected(i);
             }
         }
     }
+
 
     @Override
     public void onPageScrollStateChanged(int state) {
+        mScrollState = state;
         if (mPagerIndicator != null){
             mPagerIndicator.onPageScrollStateChanged(state);
         }
-    }
-
-    protected void setTitleClickListener(View view, final int i) {
-        view.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (i == mSelectedIndex){
-                    if (mTabSelectedListener != null){
-                        mTabSelectedListener.onTabReselected(i);
-                    }
-                } else {
-                    mViewPager.setCurrentItem(i, true);
-                }
-            }
-        });
     }
 
     private void buildLocationModel() {
@@ -216,4 +256,69 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
         }
     }
 
+    protected void setTitleClickListener(View view, final int i) {
+        view.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (i == mSelectedIndex){
+                    if (mTabSelectedListener != null){
+                        mTabSelectedListener.onTabReselected(i);
+                    }
+                } else {
+                    mViewPager.setCurrentItem(i, true);
+                }
+            }
+        });
+    }
+
+    private void dispatchOnLeave(int position, float leavePercent, boolean leftToRight){
+        if (mTitleContainer == null){
+            return;
+        }
+        if (position == mLastIndex || mScrollState == ViewPager.SCROLL_STATE_DRAGGING || ((position == mSelectedIndex - 1 || position == mSelectedIndex + 1) && mLeavedPercents.get(position, 0.0f) != 1.0f)) {
+            View titleView = mTitleContainer.getChildAt(position);
+            if (titleView instanceof IPagerTitle){
+                IPagerTitle pagerTitle = (IPagerTitle) titleView;
+                pagerTitle.onLeave(position, mAdapter.getCount(), leavePercent, leftToRight);
+                mLeavedPercents.put(position, leavePercent);
+            }
+        }
+    }
+
+    private void dispatchOnEnter(int position, float enterPercent, boolean leftToRight){
+        if (mTitleContainer == null){
+            return;
+        }
+        if (position == mSelectedIndex || mScrollState == ViewPager.SCROLL_STATE_DRAGGING ) {
+            View titleView = mTitleContainer.getChildAt(position);
+            if (titleView instanceof IPagerTitle){
+                IPagerTitle pagerTitle = (IPagerTitle) titleView;
+                pagerTitle.onEnter(position, mAdapter.getCount(), enterPercent, leftToRight);
+                mLeavedPercents.put(position, 1.0f - enterPercent);
+            }
+        }
+    }
+
+
+    private void dispatchOnSelected(int index) {
+        if (mTitleContainer == null){
+            return;
+        }
+        View view = mTitleContainer.getChildAt(index);
+        if (view instanceof IPagerTitle){
+            IPagerTitle pagerTitle = (IPagerTitle) view;
+            pagerTitle.onSelected(index, mAdapter.getCount());
+        }
+    }
+
+    private void dispatchOnDeselected(int index) {
+        if (mTitleContainer == null){
+            return;
+        }
+        View view = mTitleContainer.getChildAt(index);
+        if (view instanceof IPagerTitle){
+            IPagerTitle pagerTitle = (IPagerTitle) view;
+            pagerTitle.onDeselected(index, mAdapter.getCount());
+        }
+    }
 }
