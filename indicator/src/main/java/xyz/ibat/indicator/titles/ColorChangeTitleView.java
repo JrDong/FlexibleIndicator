@@ -14,18 +14,10 @@ import xyz.ibat.indicator.utils.ArgbEvaluatorHolder;
  *
  * 渐变色标题
  */
-public class GradientTitleView extends SimplePagerTitleView{
+public class ColorChangeTitleView extends SimplePagerTitleView{
 
-    public GradientTitleView(Context context) {
+    public ColorChangeTitleView(Context context) {
         super(context);
-    }
-
-    public GradientTitleView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public GradientTitleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
     }
 
     @Override

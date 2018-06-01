@@ -275,7 +275,8 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
         if (mTitleContainer == null){
             return;
         }
-        if (position == mLastIndex || mScrollState == ViewPager.SCROLL_STATE_DRAGGING || ((position == mSelectedIndex - 1 || position == mSelectedIndex + 1) && mLeavedPercents.get(position, 0.0f) != 1.0f)) {
+        boolean dragingNearby = (position == mSelectedIndex - 1 || position == mSelectedIndex + 1) && mLeavedPercents.get(position, 0.0f) != 1.0f;
+        if (position == mLastIndex || mScrollState == ViewPager.SCROLL_STATE_DRAGGING || dragingNearby) {
             View titleView = mTitleContainer.getChildAt(position);
             if (titleView instanceof IPagerTitle){
                 IPagerTitle pagerTitle = (IPagerTitle) titleView;

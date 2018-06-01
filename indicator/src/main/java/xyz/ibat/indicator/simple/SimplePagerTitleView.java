@@ -25,15 +25,7 @@ public class SimplePagerTitleView extends TextView implements IPagerTitle {
     protected int mSelectedColor;
 
     public SimplePagerTitleView(Context context) {
-        this(context, null);
-    }
-
-    public SimplePagerTitleView(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public SimplePagerTitleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context);
         setGravity(Gravity.CENTER);
         setSingleLine();
         setEllipsize(TextUtils.TruncateAt.END);
@@ -51,12 +43,10 @@ public class SimplePagerTitleView extends TextView implements IPagerTitle {
 
     @Override
     public void onLeave(int index, int totalCount, float leavePercent, boolean leftToRight) {
-        Log.d("dong", " onLeave index " + index + " leavePercent " + leavePercent + " leftToRight " + leftToRight);
     }
 
     @Override
     public void onEnter(int index, int totalCount, float enterPercent, boolean leftToRight) {
-        Log.d("dong", " onEnter index " + index + " enterPercent " + enterPercent + " leftToRight " + leftToRight);
     }
 
     public void setNormalColor(int color) {
