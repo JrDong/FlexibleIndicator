@@ -19,8 +19,8 @@ public class ScaleChangeTitleView extends SimplePagerTitleView{
 
     @Override
     public void onEnter(int index, int totalCount, float enterPercent, boolean leftToRight) {
-        setScaleX(mMaxScale + (mMaxScale - 1.0f) * enterPercent);
-        setScaleY(mMaxScale + (mMaxScale - 1.0f) * enterPercent);
+        setScaleX(1.0f + (mMaxScale - 1.0f) * enterPercent);
+        setScaleY(1.0f + (mMaxScale - 1.0f) * enterPercent);
     }
 
     @Override

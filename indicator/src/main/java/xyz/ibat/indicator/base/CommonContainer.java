@@ -163,20 +163,20 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
                 }
                 Float leavedPercent = mLeavedPercents.get(i, 0.0f);
                 if (leavedPercent != 1.0f) {
-                    dispatchOnLeave(i, 1.0f, leftToRight);
+                    dispatchOnLeave(i, 1.0f, leftToRight ,false);
                 }
             }
             if (normalDispatch) {
                 if (leftToRight) {
-                    dispatchOnLeave(position, positionOffset, true);
-                    dispatchOnEnter(nextPosition, positionOffset, true);
+                    dispatchOnLeave(position, positionOffset, true ,false);
+                    dispatchOnEnter(nextPosition, positionOffset, true ,false);
                 } else {
-                    dispatchOnLeave(nextPosition, 1.0f - positionOffset, false);
-                    dispatchOnEnter(position, 1.0f - positionOffset, false);
+                    dispatchOnLeave(nextPosition, 1.0f - positionOffset, false, false);
+                    dispatchOnEnter(position, 1.0f - positionOffset, false, false);
                 }
             } else {
-                dispatchOnLeave(nextPosition, 1.0f - positionOffset, true);
-                dispatchOnEnter(position, 1.0f - positionOffset, true);
+                dispatchOnLeave(nextPosition, 1.0f - positionOffset, true, false);
+                dispatchOnEnter(position, 1.0f - positionOffset, true, false);
             }
         } else {
             for (int i = 0 ; i < mAdapter.getCount() ; i++){
@@ -185,10 +185,10 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
                 }
                 Float leavedPercent = mLeavedPercents.get(i, 0.0f);
                 if (leavedPercent != 1.0f) {
-                    dispatchOnLeave(i, 1.0f, leftToRight);
+                    dispatchOnLeave(i, 1.0f, leftToRight,true);
                 }
             }
-            dispatchOnEnter(mSelectedIndex, 1f, leftToRight);
+            dispatchOnEnter(mSelectedIndex, 1f, leftToRight, true);
             dispatchOnSelected(mSelectedIndex);
         }
         mLastPositionOffset = currentPositionOffset;
@@ -271,12 +271,12 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
         });
     }
 
-    private void dispatchOnLeave(int position, float leavePercent, boolean leftToRight){
+    private void dispatchOnLeave(int position, float leavePercent, boolean leftToRight ,boolean force){
         if (mTitleContainer == null){
             return;
         }
         boolean dragingNearby = (position == mSelectedIndex - 1 || position == mSelectedIndex + 1) && mLeavedPercents.get(position, 0.0f) != 1.0f;
-        if (position == mLastIndex || mScrollState == ViewPager.SCROLL_STATE_DRAGGING || dragingNearby) {
+        if (position == mLastIndex || mScrollState == ViewPager.SCROLL_STATE_DRAGGING || dragingNearby || force) {
             View titleView = mTitleContainer.getChildAt(position);
             if (titleView instanceof IPagerTitle){
                 IPagerTitle pagerTitle = (IPagerTitle) titleView;
@@ -286,7 +286,7 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
         }
     }
 
-    private void dispatchOnEnter(int position, float enterPercent, boolean leftToRight){
+    private void dispatchOnEnter(int position, float enterPercent, boolean leftToRight, boolean force){
         if (mTitleContainer == null){
             return;
         }

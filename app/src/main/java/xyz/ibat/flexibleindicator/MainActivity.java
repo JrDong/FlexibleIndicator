@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         };
         commonContainer.setTitles(mDataList);
         commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
-        mKwIndicator3.setBackgroundColor(Color.parseColor("#fafafa"));
+        mKwIndicator3.setBackgroundColor(Color.parseColor("#e94220"));
         mKwIndicator3.setContainer(commonContainer);
         mKwIndicator3.bind(mViewPager);
     }
