@@ -2,7 +2,6 @@ package xyz.ibat.indicator.titles;
 
 import android.animation.ArgbEvaluator;
 import android.content.Context;
-import android.util.Log;
 
 import xyz.ibat.indicator.simple.SimplePagerTitleView;
 

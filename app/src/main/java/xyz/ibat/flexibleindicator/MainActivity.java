@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         };
         simpleContainer.setTitles(mDataList);
         simpleContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
-        mKwIndicator.setOnTabSelectedListener(new TabSelectedListener() {
+        mKwIndicator2.setOnTabSelectedListener(new TabSelectedListener() {
             @Override
             public void onTabSelected(int position) {
                 T.show(MainActivity.this, " onTabSelected " + position);
