@@ -20,7 +20,7 @@ import xyz.ibat.indicator.TabSelectedListener;
 import xyz.ibat.indicator.base.CommonContainer;
 import xyz.ibat.indicator.base.IPagerTitle;
 import xyz.ibat.indicator.base.IndicatorParameter;
-import xyz.ibat.indicator.base.KwIndicator;
+import xyz.ibat.indicator.base.FlexibleIndicator;
 import xyz.ibat.indicator.simple.SimpleContainer;
 import xyz.ibat.indicator.simple.SimplePagerTitleView;
 import xyz.ibat.indicator.titles.ColorChangeTitleView;
@@ -31,10 +31,10 @@ import xyz.ibat.indicator.utils.T;
 
 public class MainActivity extends AppCompatActivity {
 
-    private KwIndicator mKwIndicator;
-    private KwIndicator mKwIndicator1;
-    private KwIndicator mKwIndicator2;
-    private KwIndicator mKwIndicator3;
+    private FlexibleIndicator mFlexibleIndicator;
+    private FlexibleIndicator mFlexibleIndicator1;
+    private FlexibleIndicator mFlexibleIndicator2;
+    private FlexibleIndicator mFlexibleIndicator3;
     private ViewPager mViewPager;
 
     private static final String[] CHANNELS = new String[]{"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER" ,"DECEMBER"};
@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mKwIndicator = (KwIndicator) findViewById(R.id.kw_indicator);
-        mKwIndicator1 = (KwIndicator) findViewById(R.id.kw_indicator1);
-        mKwIndicator2 = (KwIndicator) findViewById(R.id.kw_indicator2);
-        mKwIndicator3 = (KwIndicator) findViewById(R.id.kw_indicator3);
+        mFlexibleIndicator = (FlexibleIndicator) findViewById(R.id.kw_indicator);
+        mFlexibleIndicator1 = (FlexibleIndicator) findViewById(R.id.kw_indicator1);
+        mFlexibleIndicator2 = (FlexibleIndicator) findViewById(R.id.kw_indicator2);
+        mFlexibleIndicator3 = (FlexibleIndicator) findViewById(R.id.kw_indicator3);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(mAdapter);
         initFirstIndicator();
@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
         };
         commonContainer.setTitles(mDataList);
         commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
-        mKwIndicator.setBackgroundColor(Color.parseColor("#455a64"));
-        mKwIndicator.setContainer(commonContainer);
-        mKwIndicator.bind(mViewPager);
+        mFlexibleIndicator.setBackgroundColor(Color.parseColor("#455a64"));
+        mFlexibleIndicator.setContainer(commonContainer);
+        mFlexibleIndicator.bind(mViewPager);
     }
 
 
@@ -106,9 +106,9 @@ public class MainActivity extends AppCompatActivity {
         };
         commonContainer.setTitles(mDataList);
         commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
-        mKwIndicator1.setBackgroundColor(Color.parseColor("#d43d3d"));
-        mKwIndicator1.setContainer(commonContainer);
-        mKwIndicator1.bind(mViewPager);
+        mFlexibleIndicator1.setBackgroundColor(Color.parseColor("#d43d3d"));
+        mFlexibleIndicator1.setContainer(commonContainer);
+        mFlexibleIndicator1.bind(mViewPager);
     }
 
     private void initThirdIndicator() {
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         };
         simpleContainer.setTitles(mDataList);
         simpleContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
-        mKwIndicator2.setOnTabSelectedListener(new TabSelectedListener() {
+        mFlexibleIndicator2.setOnTabSelectedListener(new TabSelectedListener() {
             @Override
             public void onTabSelected(int position) {
                 T.show(MainActivity.this, " onTabSelected " + position);
@@ -142,9 +142,9 @@ public class MainActivity extends AppCompatActivity {
                 T.show(MainActivity.this, " onTabReselected " + position);
             }
         });
-        mKwIndicator2.setBackgroundColor(Color.parseColor("#00c853"));
-        mKwIndicator2.setContainer(simpleContainer);
-        mKwIndicator2.bind(mViewPager);
+        mFlexibleIndicator2.setBackgroundColor(Color.parseColor("#00c853"));
+        mFlexibleIndicator2.setContainer(simpleContainer);
+        mFlexibleIndicator2.bind(mViewPager);
     }
 
     private void initFourthIndicator(){
@@ -174,9 +174,9 @@ public class MainActivity extends AppCompatActivity {
         };
         commonContainer.setTitles(mDataList);
         commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
-        mKwIndicator3.setBackgroundColor(Color.parseColor("#e94220"));
-        mKwIndicator3.setContainer(commonContainer);
-        mKwIndicator3.bind(mViewPager);
+        mFlexibleIndicator3.setBackgroundColor(Color.parseColor("#e94220"));
+        mFlexibleIndicator3.setContainer(commonContainer);
+        mFlexibleIndicator3.bind(mViewPager);
     }
 
     private class IndicatorAdapter extends PagerAdapter {

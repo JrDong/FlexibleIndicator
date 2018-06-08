@@ -17,18 +17,18 @@ import xyz.ibat.indicator.TabSelectedListener;
  *
  * @date 2018/5/25.
  */
-public class KwIndicator extends FrameLayout implements ViewPager.OnPageChangeListener{
+public class FlexibleIndicator extends FrameLayout implements ViewPager.OnPageChangeListener{
 
     private IPagerContainer mPagerContainer;
     private TabSelectedListener mTabSelectedListener;
     private int mLastPosition = -1;
     private int mCurrentPosition = -1;
 
-    public KwIndicator(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public FlexibleIndicator(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public KwIndicator(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public FlexibleIndicator(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

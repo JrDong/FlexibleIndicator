@@ -3,22 +3,22 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <xyz.ibat.indicator.base.KwIndicator
+    <xyz.ibat.indicator.base.FlexibleIndicator
         android:id="@+id/kw_indicator"
         android:layout_width="match_parent"
         android:layout_height="45dp"/>
 
-    <xyz.ibat.indicator.base.KwIndicator
+    <xyz.ibat.indicator.base.FlexibleIndicator
         android:id="@+id/kw_indicator1"
         android:layout_width="match_parent"
         android:layout_height="45dp"/>
 
-    <xyz.ibat.indicator.base.KwIndicator
+    <xyz.ibat.indicator.base.FlexibleIndicator
         android:id="@+id/kw_indicator2"
         android:layout_width="match_parent"
         android:layout_height="45dp"/>
 
-    <xyz.ibat.indicator.base.KwIndicator
+    <xyz.ibat.indicator.base.FlexibleIndicator
         android:id="@+id/kw_indicator3"
         android:layout_width="match_parent"
         android:layout_height="45dp"/>
