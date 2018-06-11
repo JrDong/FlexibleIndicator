@@ -1,7 +1,10 @@
 package xyz.ibat.indicator.simple;
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -47,6 +50,20 @@ public class SimplePagerTitleView extends TextView implements IPagerTitle {
 
     @Override
     public void onEnter(int index, int totalCount, float enterPercent, boolean leftToRight) {
+    }
+
+    @Override
+    public int getContentLeft() {
+        Rect rect = new Rect();
+        getPaint().getTextBounds(getText().toString(), 0, getText().length(), rect);
+        return getLeft() + getWidth() / 2 - rect.width() / 2;
+    }
+
+    @Override
+    public int getContentRight() {
+        Rect rect = new Rect();
+        getPaint().getTextBounds(getText().toString(), 0, getText().length(), rect);
+        return getRight() - getWidth() / 2 + rect.width() / 2;
     }
 
     public void setNormalColor(int color) {

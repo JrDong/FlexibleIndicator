@@ -29,4 +29,14 @@ public interface IPagerTitle {
      */
     void onEnter(int index, int totalCount, float enterPercent, boolean leftToRight);
 
+    /**
+     * 内容区域左边坐标
+     */
+    int getContentLeft();
+
+
+    /**
+     * 内容区域右边坐标
+     */
+    int getContentRight();
 }

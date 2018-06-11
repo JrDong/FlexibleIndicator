@@ -1,8 +1,12 @@
 package xyz.ibat.indicator.base;
 
+import android.support.annotation.IntDef;
 import android.view.Gravity;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * @author DongJr
@@ -16,8 +20,22 @@ public class IndicatorParameter {
     public int indicatorColor;
     public int radius;
     public int gravity;
+    public int showMode;
     public Interpolator startInterpolator;
     public Interpolator endInterpolator;
+    /**
+     * 普通模式
+     */
+    public static final int MODE_NORMAL = 1;
+    /**
+     * 自适应标题
+     */
+    public static final int MODE_FIXED_TITLE = 2;
+
+    @IntDef(value = {MODE_NORMAL, MODE_FIXED_TITLE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Mode{
+    }
 
     public IndicatorParameter(Builder builder){
         this.lRPadding = builder.lRPadding;
@@ -25,6 +43,7 @@ public class IndicatorParameter {
         this.indicatorColor = builder.indicatorColor;
         this.radius = builder.radius;
         this.gravity = builder.gravity;
+        this.showMode = builder.showMode;
         this.startInterpolator = builder.startInterpolator == null ? new LinearInterpolator() : builder.startInterpolator;
         this.endInterpolator = builder.endInterpolator == null ? new LinearInterpolator() : builder.endInterpolator;
     }
@@ -35,6 +54,8 @@ public class IndicatorParameter {
         private int indicatorColor;
         private int radius;
         private int gravity = Gravity.BOTTOM;
+        private int showMode = MODE_NORMAL;
+
         private Interpolator startInterpolator;
         private Interpolator endInterpolator;
 
@@ -75,6 +96,11 @@ public class IndicatorParameter {
 
         public Builder withEndInterpolator(Interpolator endInterpolator){
             this.endInterpolator = endInterpolator;
+            return this;
+        }
+
+        public Builder withShowMode(@Mode int mode){
+            this.showMode = mode;
             return this;
         }
 

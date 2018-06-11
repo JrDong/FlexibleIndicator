@@ -11,6 +11,8 @@ public class LocationModel {
     public int right;
     public int top;
     public int bottom;
+    public int contentLeft;
+    public int contentRight;
 
     public int getWidth(){
         return right - left;
@@ -28,5 +30,8 @@ public class LocationModel {
         return top + getHeight() / 2;
     }
 
+    public int getContentWidth(){
+        return contentRight - contentLeft;
+    }
 
 }

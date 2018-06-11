@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private FlexibleIndicator mFlexibleIndicator1;
     private FlexibleIndicator mFlexibleIndicator2;
     private FlexibleIndicator mFlexibleIndicator3;
+    private FlexibleIndicator mFlexibleIndicator4;
     private ViewPager mViewPager;
 
     private static final String[] CHANNELS = new String[]{"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER" ,"DECEMBER"};
@@ -49,12 +51,14 @@ public class MainActivity extends AppCompatActivity {
         mFlexibleIndicator1 = (FlexibleIndicator) findViewById(R.id.kw_indicator1);
         mFlexibleIndicator2 = (FlexibleIndicator) findViewById(R.id.kw_indicator2);
         mFlexibleIndicator3 = (FlexibleIndicator) findViewById(R.id.kw_indicator3);
+        mFlexibleIndicator4 = (FlexibleIndicator) findViewById(R.id.kw_indicator4);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(mAdapter);
         initFirstIndicator();
         initSecondIndicator();
         initThirdIndicator();
         initFourthIndicator();
+        initFifthIndicator();
     }
 
     private void initFirstIndicator() {
@@ -177,6 +181,38 @@ public class MainActivity extends AppCompatActivity {
         mFlexibleIndicator3.setBackgroundColor(Color.parseColor("#e94220"));
         mFlexibleIndicator3.setContainer(commonContainer);
         mFlexibleIndicator3.bind(mViewPager);
+    }
+
+    private void initFifthIndicator() {
+        SimpleContainer commonContainer = new SimpleContainer(this){
+            @Override
+            public IPagerTitle getTitleView(Context context, int index) {
+                SimplePagerTitleView simplePagerTitleView = new SimplePagerTitleView(context);
+                int padding = IndicatorHelper.dip2px(getContext(), 16);
+                simplePagerTitleView.setPadding(padding, 0, padding, 0);
+                simplePagerTitleView.setNormalColor(Color.parseColor("#616161"));
+                simplePagerTitleView.setSelectedColor(Color.parseColor("#f57c00"));
+                simplePagerTitleView.setText(mDataList.get(index));
+                return simplePagerTitleView;
+            }
+
+            @Override
+            protected IndicatorParameter provideIndicatorParameter() {
+                return new IndicatorParameter.Builder()
+                        .withIndicatorHeight(IndicatorHelper.dip2px(getContext(), 3))
+                        .withIndicatorColor(Color.parseColor("#40c4ff"))
+                        .withGravity(Gravity.BOTTOM)
+                        .withShowMode(IndicatorParameter.MODE_FIXED_TITLE)
+                        .withStartInterpolator(new LinearInterpolator())
+                        .withEndInterpolator(new LinearInterpolator())
+                        .build();
+            }
+        };
+        commonContainer.setTitles(mDataList);
+        commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
+        mFlexibleIndicator4.setBackgroundColor(Color.parseColor("#394120"));
+        mFlexibleIndicator4.setContainer(commonContainer);
+        mFlexibleIndicator4.bind(mViewPager);
     }
 
     private class IndicatorAdapter extends PagerAdapter {

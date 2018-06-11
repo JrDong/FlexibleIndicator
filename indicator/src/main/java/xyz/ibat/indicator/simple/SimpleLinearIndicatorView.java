@@ -63,6 +63,16 @@ public class SimpleLinearIndicatorView extends View implements IPagerIndicator {
         float rightX = current.right;
         float nextRightX = next.right;
 
+        switch (mParameter.showMode){
+            case IndicatorParameter.MODE_FIXED_TITLE:
+                leftX = current.contentLeft;
+                nextLeftX = next.contentLeft;
+                rightX = current.contentRight;
+                nextRightX = next.contentRight;
+                break;
+            default:
+                break;
+        }
         mLineRect.left = leftX + (nextLeftX - leftX) * mParameter.startInterpolator.getInterpolation(positionOffset) + mParameter.lRPadding;
         mLineRect.right = rightX + (nextRightX - rightX) * mParameter.endInterpolator.getInterpolation(positionOffset) - mParameter.lRPadding;
 
