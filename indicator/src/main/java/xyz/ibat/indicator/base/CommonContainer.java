@@ -28,6 +28,7 @@ import xyz.ibat.indicator.model.LocationModel;
 
 /**
  * @author DongJr
+ *
  * @date 2018/5/25.
  */
 public abstract class CommonContainer extends FrameLayout implements IPagerContainer {
@@ -40,6 +41,10 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
     private int mScrollState;
     private float mLastPositionOffset;
     private float mScrollRate = 0.5f;
+    /**
+     * 渐变色标题需要强制更新
+     */
+    private boolean mIsTransform;
     private List<LocationModel> mLocationDatas = new ArrayList<>();
     private SparseArray<Float> mLeavedPercents = new SparseArray<Float>();
 
@@ -57,8 +62,7 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
 
     @IntDef(value = {MODE_SCROLLABLE, MODE_FIXED})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Mode {
-    }
+    public @interface Mode {}
 
     public void setTabMode(@Mode int mode) {
         mMode = mode;
@@ -71,16 +75,20 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
     /**
      * MODE_FIXED模式可重写，默认为1
      */
-    protected int getTitleWeight(Context context, int index) {
+    protected int getTitleWeight(Context context, int index){
         return 1;
+    }
+
+    public void setTransform(boolean isTransform){
+        mIsTransform = isTransform;
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (mAdapter != null && mTitleContainer != null) {
+        if (mAdapter != null && mTitleContainer != null){
             buildLocationModel();
-            if (mPagerIndicator != null) {
+            if (mPagerIndicator != null){
                 mPagerIndicator.onProvideLocation(mLocationDatas);
             }
         }
@@ -95,14 +103,14 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
     public void onAttachToIndicator() {
         removeAllViews();
         View root;
-        if (mMode == MODE_SCROLLABLE) {
+        if (mMode == MODE_SCROLLABLE){
             root = LayoutInflater.from(getContext()).inflate(R.layout.pager_navigator_layout, this, true);
             mScrollView = (HorizontalScrollView) root.findViewById(R.id.scroll_view);
         } else {
             root = LayoutInflater.from(getContext()).inflate(R.layout.pager_navigator_layout_no_scroll, this, true);
         }
         mIndicatorContainer = (LinearLayout) root.findViewById(R.id.indicator_container);
-        mTitleContainer = (LinearLayout) root.findViewById(R.id.title_container);
+        mTitleContainer = (LinearLayout)root.findViewById(R.id.title_container);
         initIndicatorAndTitle();
     }
 
@@ -119,7 +127,7 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        if (mPagerIndicator != null) {
+        if (mPagerIndicator != null){
             mPagerIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels);
         }
         onScrollViewScrolled(position, positionOffset);
@@ -130,11 +138,11 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
     public void onPageSelected(int position) {
         mLastIndex = position;
         mSelectedIndex = position;
-        if (mPagerIndicator != null) {
+        if (mPagerIndicator != null){
             mPagerIndicator.onPageSelected(position);
         }
-        for (int i = 0; i < mAdapter.getCount(); i++) {
-            if (position == i) {
+        for (int i = 0; i < mAdapter.getCount(); i++){
+            if (position == i){
                 dispatchOnSelected(i);
             } else {
                 dispatchOnDeselected(i);
@@ -145,7 +153,7 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
     @Override
     public void onPageScrollStateChanged(int state) {
         mScrollState = state;
-        if (mPagerIndicator != null) {
+        if (mPagerIndicator != null){
             mPagerIndicator.onPageScrollStateChanged(state);
         }
     }
@@ -154,8 +162,8 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (i == mSelectedIndex) {
-                    if (mTabSelectedListener != null) {
+                if (i == mSelectedIndex){
+                    if (mTabSelectedListener != null){
                         mTabSelectedListener.onTabReselected(i);
                     }
                 } else {
@@ -167,14 +175,14 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
 
     private void buildLocationModel() {
         mLocationDatas.clear();
-        for (int i = 0; i < mAdapter.getCount(); i++) {
+        for (int i = 0 ; i < mAdapter.getCount(); i++){
             LocationModel locationModel = new LocationModel();
             View childAt = mTitleContainer.getChildAt(i);
             locationModel.left = childAt.getLeft();
             locationModel.top = childAt.getTop();
             locationModel.right = childAt.getRight();
             locationModel.bottom = childAt.getBottom();
-            if (childAt instanceof IPagerTitle) {
+            if (childAt instanceof IPagerTitle){
                 locationModel.contentLeft = ((IPagerTitle) childAt).getContentLeft();
                 locationModel.contentRight = ((IPagerTitle) childAt).getContentRight();
             }
@@ -223,8 +231,8 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
     private void onTitleViewScrolled(int position, float positionOffset) {
         float currentPositionOffset = position + positionOffset;
         boolean leftToRight = currentPositionOffset >= mLastPositionOffset;
-        if (mScrollState != ViewPager.SCROLL_STATE_IDLE) {
-            if (mLastPositionOffset == currentPositionOffset) {
+        if (mScrollState != ViewPager.SCROLL_STATE_IDLE){
+            if (mLastPositionOffset == currentPositionOffset){
                 return;
             }
             int nextPosition = position + 1;
@@ -241,13 +249,13 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
                 }
                 Float leavedPercent = mLeavedPercents.get(i, 0.0f);
                 if (leavedPercent != 1.0f) {
-                    dispatchOnLeave(i, 1.0f, leftToRight, false);
+                    dispatchOnLeave(i, 1.0f, leftToRight ,false);
                 }
             }
             if (normalDispatch) {
                 if (leftToRight) {
-                    dispatchOnLeave(position, positionOffset, true, false);
-                    dispatchOnEnter(nextPosition, positionOffset, true, false);
+                    dispatchOnLeave(position, positionOffset, true ,false);
+                    dispatchOnEnter(nextPosition, positionOffset, true ,false);
                 } else {
                     dispatchOnLeave(nextPosition, 1.0f - positionOffset, false, false);
                     dispatchOnEnter(position, 1.0f - positionOffset, false, false);
@@ -257,13 +265,13 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
                 dispatchOnEnter(position, 1.0f - positionOffset, true, false);
             }
         } else {
-            for (int i = 0; i < mAdapter.getCount(); i++) {
-                if (i == mSelectedIndex) {
+            for (int i = 0 ; i < mAdapter.getCount() ; i++){
+                if (i == mSelectedIndex){
                     continue;
                 }
                 Float leavedPercent = mLeavedPercents.get(i, 0.0f);
                 if (leavedPercent != 1.0f) {
-                    dispatchOnLeave(i, 1.0f, leftToRight, true);
+                    dispatchOnLeave(i, 1.0f, leftToRight,true);
                 }
             }
             dispatchOnEnter(mSelectedIndex, 1f, leftToRight, true);
@@ -272,47 +280,52 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
         mLastPositionOffset = currentPositionOffset;
     }
 
-    private void dispatchOnLeave(int position, float leavePercent, boolean leftToRight, boolean force) {
-        if (mTitleContainer == null) {
+    private void dispatchOnLeave(int position, float leavePercent, boolean leftToRight ,boolean force){
+        if (mTitleContainer == null){
             return;
         }
-        View titleView = mTitleContainer.getChildAt(position);
-        if (titleView instanceof IPagerTitle) {
-            IPagerTitle pagerTitle = (IPagerTitle) titleView;
-            pagerTitle.onLeave(position, mAdapter.getCount(), leavePercent, leftToRight);
-            mLeavedPercents.put(position, leavePercent);
+        boolean dragingNearby = (position == mSelectedIndex - 1 || position == mSelectedIndex + 1) && mLeavedPercents.get(position, 0.0f) != 1.0f;
+        if (mIsTransform || position == mLastIndex || mScrollState == ViewPager.SCROLL_STATE_DRAGGING || dragingNearby ||force) {
+            View titleView = mTitleContainer.getChildAt(position);
+            if (titleView instanceof IPagerTitle){
+                IPagerTitle pagerTitle = (IPagerTitle) titleView;
+                pagerTitle.onLeave(position, mAdapter.getCount(), leavePercent, leftToRight);
+                mLeavedPercents.put(position, leavePercent);
+            }
         }
     }
 
-    private void dispatchOnEnter(int position, float enterPercent, boolean leftToRight, boolean force) {
-        if (mTitleContainer == null) {
+    private void dispatchOnEnter(int position, float enterPercent, boolean leftToRight, boolean force){
+        if (mTitleContainer == null){
             return;
         }
-        View titleView = mTitleContainer.getChildAt(position);
-        if (titleView instanceof IPagerTitle) {
-            IPagerTitle pagerTitle = (IPagerTitle) titleView;
-            pagerTitle.onEnter(position, mAdapter.getCount(), enterPercent, leftToRight);
-            mLeavedPercents.put(position, 1.0f - enterPercent);
+        if (position == mSelectedIndex || mScrollState == ViewPager.SCROLL_STATE_DRAGGING ) {
+            View titleView = mTitleContainer.getChildAt(position);
+            if (titleView instanceof IPagerTitle){
+                IPagerTitle pagerTitle = (IPagerTitle) titleView;
+                pagerTitle.onEnter(position, mAdapter.getCount(), enterPercent, leftToRight);
+                mLeavedPercents.put(position, 1.0f - enterPercent);
+            }
         }
     }
 
     private void dispatchOnSelected(int index) {
-        if (mTitleContainer == null) {
+        if (mTitleContainer == null){
             return;
         }
         View view = mTitleContainer.getChildAt(index);
-        if (view instanceof IPagerTitle) {
+        if (view instanceof IPagerTitle){
             IPagerTitle pagerTitle = (IPagerTitle) view;
             pagerTitle.onSelected(index, mAdapter.getCount());
         }
     }
 
     private void dispatchOnDeselected(int index) {
-        if (mTitleContainer == null) {
+        if (mTitleContainer == null){
             return;
         }
         View view = mTitleContainer.getChildAt(index);
-        if (view instanceof IPagerTitle) {
+        if (view instanceof IPagerTitle){
             IPagerTitle pagerTitle = (IPagerTitle) view;
             pagerTitle.onDeselected(index, mAdapter.getCount());
         }

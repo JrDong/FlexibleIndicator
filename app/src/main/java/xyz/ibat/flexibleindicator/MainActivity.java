@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         };
         commonContainer.setTitles(mDataList);
         commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
+        commonContainer.setTransform(true);
         mFlexibleIndicator.setBackgroundColor(Color.parseColor("#455a64"));
         mFlexibleIndicator.setContainer(commonContainer);
         mFlexibleIndicator.bind(mViewPager);
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         };
         simpleContainer.setTitles(mDataList);
         simpleContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
+        simpleContainer.setTransform(true);
         mFlexibleIndicator2.setOnTabSelectedListener(new TabSelectedListener() {
             @Override
             public void onTabSelected(int position) {
@@ -176,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
                         .build();
             }
         };
+        commonContainer.setTransform(true);
         commonContainer.setTitles(mDataList);
         commonContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
         mFlexibleIndicator3.setBackgroundColor(Color.parseColor("#e94220"));
