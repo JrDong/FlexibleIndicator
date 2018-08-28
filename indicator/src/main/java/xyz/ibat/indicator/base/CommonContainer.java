@@ -185,6 +185,8 @@ public abstract class CommonContainer extends FrameLayout implements IPagerConta
             if (childAt instanceof IPagerTitle){
                 locationModel.contentLeft = ((IPagerTitle) childAt).getContentLeft();
                 locationModel.contentRight = ((IPagerTitle) childAt).getContentRight();
+                locationModel.contentTop = ((IPagerTitle) childAt).getContentTop();
+                locationModel.contentBottom = ((IPagerTitle) childAt).getContentBottom();
             }
             mLocationDatas.add(locationModel);
         }

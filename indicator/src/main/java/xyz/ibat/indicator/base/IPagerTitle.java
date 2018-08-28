@@ -39,4 +39,16 @@ public interface IPagerTitle {
      * 内容区域右边坐标
      */
     int getContentRight();
+
+    /**
+     *
+     * 内容区域顶部坐标
+     */
+    int getContentTop();
+
+    /**
+     *
+     * 内容区域底部坐标
+     */
+    int getContentBottom();
 }

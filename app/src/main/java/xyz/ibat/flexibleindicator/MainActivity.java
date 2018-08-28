@@ -22,6 +22,7 @@ import xyz.ibat.indicator.base.CommonContainer;
 import xyz.ibat.indicator.base.IPagerTitle;
 import xyz.ibat.indicator.base.IndicatorParameter;
 import xyz.ibat.indicator.base.FlexibleIndicator;
+import xyz.ibat.indicator.reddot.RedDotContainer;
 import xyz.ibat.indicator.simple.SimpleContainer;
 import xyz.ibat.indicator.simple.SimplePagerTitleView;
 import xyz.ibat.indicator.titles.ColorChangeTitleView;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private FlexibleIndicator mFlexibleIndicator2;
     private FlexibleIndicator mFlexibleIndicator3;
     private FlexibleIndicator mFlexibleIndicator4;
+    private FlexibleIndicator mFlexibleIndicator5;
     private ViewPager mViewPager;
 
     private static final String[] CHANNELS = new String[]{"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER" ,"DECEMBER"};
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mFlexibleIndicator2 = (FlexibleIndicator) findViewById(R.id.kw_indicator2);
         mFlexibleIndicator3 = (FlexibleIndicator) findViewById(R.id.kw_indicator3);
         mFlexibleIndicator4 = (FlexibleIndicator) findViewById(R.id.kw_indicator4);
+        mFlexibleIndicator5 = (FlexibleIndicator) findViewById(R.id.kw_indicator5);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(mAdapter);
         initFirstIndicator();
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         initThirdIndicator();
         initFourthIndicator();
         initFifthIndicator();
+        initSixthIndicator();
     }
 
     private void initFirstIndicator() {
@@ -217,6 +221,19 @@ public class MainActivity extends AppCompatActivity {
         mFlexibleIndicator4.setContainer(commonContainer);
         mFlexibleIndicator4.bind(mViewPager);
     }
+
+    private void initSixthIndicator() {
+        RedDotContainer redDotContainer = new RedDotContainer(this);
+        redDotContainer.setTitles(mDataList);
+        redDotContainer.setTabMode(CommonContainer.MODE_SCROLLABLE);
+        redDotContainer.setTransform(true);
+        List<Integer> integers = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        redDotContainer.setRedDotIndexes(integers);
+        mFlexibleIndicator5.setBackgroundColor(Color.parseColor("#455a64"));
+        mFlexibleIndicator5.setContainer(redDotContainer);
+        mFlexibleIndicator5.bind(mViewPager);
+    }
+
 
     private class IndicatorAdapter extends PagerAdapter {
 

@@ -66,6 +66,20 @@ public class SimplePagerTitleView extends TextView implements IPagerTitle {
         return getRight() - getWidth() / 2 + rect.width() / 2;
     }
 
+    @Override
+    public int getContentTop() {
+        Rect rect = new Rect();
+        getPaint().getTextBounds(getText().toString(), 0, getText().length(), rect);
+        return rect.top;
+    }
+
+    @Override
+    public int getContentBottom() {
+        Rect rect = new Rect();
+        getPaint().getTextBounds(getText().toString(), 0, getText().length(), rect);
+        return rect.bottom;
+    }
+
     public void setNormalColor(int color) {
         mNormalColor = color;
     }
